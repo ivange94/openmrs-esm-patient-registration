@@ -33,6 +33,7 @@ import { interpolateString, navigate } from '@openmrs/esm-config';
 import { useTranslation } from 'react-i18next';
 import { XAxis16 } from '@carbon/icons-react';
 import { Button, Link } from 'carbon-components-react';
+import { SectionWrapper } from './section/section-wrapper.component';
 
 export const initialAddressFieldValues = {};
 const patientUuidMap = {};
@@ -120,6 +121,27 @@ export const PatientRegistration: React.FC = () => {
   const [addressTemplate, setAddressTemplate] = useState('');
   const [isLoadingPatient, existingPatient, patientUuid, patientErr] = useCurrentPatient();
   const { t } = useTranslation();
+  const [sections, setSections] = useState([]);
+
+  useEffect(() => {
+    if (config && config.sections) {
+      const tmp_sections = config.sections.map(section => ({
+        id: section,
+        name: config.sectionDefinitions[section].name,
+        fields: config.fieldConfigurations,
+        fieldConfigs: config.fieldConfigurations,
+      }));
+      setSections(tmp_sections);
+    }
+  }, [config]);
+
+  const scrollIntoView = viewId => {
+    document.getElementById(viewId).scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center',
+    });
+  };
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -471,48 +493,61 @@ export const PatientRegistration: React.FC = () => {
           <Form className={styles.form}>
             <div className="bx--grid bx--grid--narrow">
               <div className="bx--row">
-                <div className="bx--col">
+                <div className="bx--col-lg-2 bx--col-md-2">
                   <h4>{existingPatient ? 'Edit' : 'Create New'} Patient</h4>
                   {localStorage.getItem('openmrs:devtools') === 'true' && !existingPatient && (
                     <DummyDataInput setValues={props.setValues} />
                   )}
-                </div>
-              </div>
-
-              <div className="bx--row">
-                <div className="bx--col-lg-2 bx--col-md-2">
                   <p className={styles.label01}>Jump to</p>
-                  <div className={styles.space05}>
-                    <Link className={styles.productiveHeading02}>
-                      <XAxis16 /> Basic Info
-                    </Link>
-                  </div>
-                  <div className={styles.space05}>
-                    <Link className={styles.productiveHeading02}>
-                      <XAxis16 /> Contact Details
-                    </Link>
-                  </div>
-                  <div className={styles.space05}>
-                    <Link className={styles.productiveHeading02}>
-                      <XAxis16 /> Relationships
-                    </Link>
-                  </div>
+                  {sections.map(section => (
+                    <div className={styles.space05}>
+                      <Link className={styles.productiveHeading02} onClick={() => scrollIntoView(section.id)}>
+                        <XAxis16 /> {section.name}
+                      </Link>
+                    </div>
+                  ))}
                 </div>
                 <div className="bx--col-lg-10 bx--col-md-6">
-                  <DemographicsSection setFieldValue={props.setFieldValue} values={props.values} />
-                  <ContactInfoSection addressTemplate={addressTemplate} />
-                  <IdentifierSection
-                    identifierTypes={identifierTypes}
-                    validationSchema={validationSchema}
-                    setValidationSchema={setValidationSchema}
-                    inEditMode={Boolean(existingPatient)}
-                    values={props.values}
-                  />
-                  <DeathInfoSection values={props.values} />
-                  {config && config.personAttributeSections && (
-                    <PersonAttributesSection attributeSections={config.personAttributeSections} />
-                  )}
-                  <RelationshipsSection setFieldValue={props.setFieldValue} />
+                  {sections.map(section => {
+                    switch (section.id) {
+                      case 'demographics':
+                        return (
+                          <SectionWrapper {...section}>
+                            <DemographicsSection setFieldValue={props.setFieldValue} values={props.values} />
+                          </SectionWrapper>
+                        );
+                      case 'contact':
+                        return (
+                          <SectionWrapper {...section}>
+                            <ContactInfoSection addressTemplate={addressTemplate} />
+                          </SectionWrapper>
+                        );
+                      case 'ids':
+                        return (
+                          <SectionWrapper {...section}>
+                            <IdentifierSection
+                              identifierTypes={identifierTypes}
+                              validationSchema={validationSchema}
+                              setValidationSchema={setValidationSchema}
+                              inEditMode={!!existingPatient}
+                              values={props.values}
+                            />
+                          </SectionWrapper>
+                        );
+                      case 'death':
+                        return (
+                          <SectionWrapper {...section}>
+                            <DeathInfoSection values={props.values} />
+                          </SectionWrapper>
+                        );
+                      case 'relationships':
+                        return (
+                          <SectionWrapper {...section}>
+                            <RelationshipsSection setFieldValue={props.setFieldValue} />
+                          </SectionWrapper>
+                        );
+                    }
+                  })}
                   <Button type="submit">{existingPatient ? 'Save Patient' : 'Register Patient'}</Button>
                 </div>
               </div>
