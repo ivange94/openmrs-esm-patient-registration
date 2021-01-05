@@ -3,7 +3,7 @@ const builtInFields = ['name', 'gender', 'dob', 'address', 'id', 'death'];
 export const esmPatientRegistrationSchema = {
   sections: {
     _type: Type.Array,
-    _default: ['demographics', 'ids', 'death'],
+    _default: ['demographics', 'contact', 'relationships'],
     _description: "An array of strings which are the keys from 'sectionDefinitions'",
     _elements: {
       _type: Type.String,
@@ -27,10 +27,10 @@ export const esmPatientRegistrationSchema = {
       },
     },
     _default: {
-      demographics: { name: 'Demographics', fields: ['name', 'gender', 'dob'] },
-      contact: { name: 'Contact Info', fields: ['address'] },
-      ids: { name: 'Identifiers', fields: ['id'] },
+      demographics: { name: 'Basic Info', fields: ['name', 'gender', 'id'] },
+      contact: { name: 'Contact Details', fields: ['address'] },
       death: { name: 'Death Info', fields: ['death'] },
+      relationships: { name: 'Relationships' },
     },
   },
   fieldDefinitions: {
@@ -71,9 +71,6 @@ export const esmPatientRegistrationSchema = {
       name: {
         displayMiddleName: false,
         unidentifiedPatient: true,
-      },
-      gender: {
-        options: ['Male', 'Female', 'Other'],
       },
     },
   },

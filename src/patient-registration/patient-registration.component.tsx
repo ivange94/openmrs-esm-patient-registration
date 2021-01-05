@@ -128,7 +128,7 @@ export const PatientRegistration: React.FC = () => {
       const tmp_sections = config.sections.map(section => ({
         id: section,
         name: config.sectionDefinitions[section].name,
-        fields: config.fieldConfigurations,
+        fields: config.sectionDefinitions[section].fields,
         fieldConfigs: config.fieldConfigurations,
       }));
       setSections(tmp_sections);
@@ -494,18 +494,20 @@ export const PatientRegistration: React.FC = () => {
             <div className="bx--grid bx--grid--narrow">
               <div className="bx--row">
                 <div className="bx--col-lg-2 bx--col-md-2">
-                  <h4>{existingPatient ? 'Edit' : 'Create New'} Patient</h4>
-                  {localStorage.getItem('openmrs:devtools') === 'true' && !existingPatient && (
-                    <DummyDataInput setValues={props.setValues} />
-                  )}
-                  <p className={styles.label01}>Jump to</p>
-                  {sections.map(section => (
-                    <div className={styles.space05}>
-                      <Link className={styles.productiveHeading02} onClick={() => scrollIntoView(section.id)}>
-                        <XAxis16 /> {section.name}
-                      </Link>
-                    </div>
-                  ))}
+                  <div className={styles.fixedPosition}>
+                    <h4>{existingPatient ? 'Edit' : 'Create New'} Patient</h4>
+                    {localStorage.getItem('openmrs:devtools') === 'true' && !existingPatient && (
+                      <DummyDataInput setValues={props.setValues} />
+                    )}
+                    <p className={styles.label01}>Jump to</p>
+                    {sections.map(section => (
+                      <div className={styles.space05}>
+                        <Link className={styles.productiveHeading02} onClick={() => scrollIntoView(section.id)}>
+                          <XAxis16 /> {section.name}
+                        </Link>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div className="bx--col-lg-10 bx--col-md-6">
                   {sections.map(section => {
@@ -513,7 +515,14 @@ export const PatientRegistration: React.FC = () => {
                       case 'demographics':
                         return (
                           <SectionWrapper {...section}>
-                            <DemographicsSection setFieldValue={props.setFieldValue} values={props.values} />
+                            <DemographicsSection
+                              setFieldValue={props.setFieldValue}
+                              values={props.values}
+                              identifierTypes={identifierTypes}
+                              validationSchema={validationSchema}
+                              setValidationSchema={setValidationSchema}
+                              {...section}
+                            />
                           </SectionWrapper>
                         );
                       case 'contact':

@@ -8,13 +8,23 @@ import { EstimatedAgeInput } from '../../input/custom-input/estimated-age/estima
 import { Input } from '../../input/basic-input/input/input.component';
 import styles from './../section.scss';
 import { useField } from 'formik';
+import { NameField } from '../../field/name/name-field.component';
+import { GenderField } from '../../field/gender/gender-field.component';
+import { IdField } from '../../field/id/id-field.component';
 
 interface DemographicsSectionProps {
   setFieldValue(field: string, value: any, shouldValidate?: boolean): void;
   values: FormValues;
+  fields: Array<string>;
+  fieldConfigs: any;
 }
 
-export const DemographicsSection: React.FC<DemographicsSectionProps> = ({ setFieldValue, values }) => {
+export const DemographicsSection: React.FC<DemographicsSectionProps> = ({
+  setFieldValue,
+  values,
+  fields,
+  fieldConfigs,
+}) => {
   const { t } = useTranslation();
   const [field, meta] = useField('addNameInLocalLanguage');
 
@@ -28,41 +38,28 @@ export const DemographicsSection: React.FC<DemographicsSectionProps> = ({ setFie
   return (
     <section className={styles.formSection} aria-label="Demographics Section">
       <h5 className={`omrs-type-title-5 ${styles.formSectionTitle}`}>{t('demographics', 'Demographics')}</h5>
-      <section className={styles.fieldGroup}>
-        <NameInput givenName="givenName" middleName="middleName" familyName="familyName" showRequiredAsterisk={true} />
-        <UnidentifiedPatientInput name="unidentifiedPatient" setName={setFieldValue} />
-      </section>
-      <section className={styles.fieldGroup}>
-        <Input type="checkbox" label="Add name" name="addNameInLocalLanguage" />
-      </section>
-      <section className={styles.fieldGroup}>
-        {values.addNameInLocalLanguage && (
-          <NameInput
-            givenName="additionalGivenName"
-            middleName="additionalMiddleName"
-            familyName="additionalFamilyName"
-            showRequiredAsterisk={true}
-            label="Additional name"
-          />
-        )}
-      </section>
-      <section className={styles.fieldGroup}>
-        <SelectInput
-          name="gender"
-          options={['Male', 'Female', 'Other', 'Unknown']}
-          label="Gender"
-          showRequiredAsterisk={true}
-        />
-      </section>
-      <section className={styles.fieldGroup}>
-        <Input type="date" label="Date of Birth" name="birthdate" showRequiredAsterisk={true} />
-        <Input type="checkbox" label="Estimated Birthdate" name="birthdateEstimated" />
-      </section>
-      {values.birthdateEstimated && (
-        <section className={styles.fieldGroup}>
-          <EstimatedAgeInput yearsName="yearsEstimated" monthsName="monthsEstimated" setBirthdate={setFieldValue} />
-        </section>
-      )}
+      {fields.map(field => {
+        switch (field) {
+          case 'name':
+            return (
+              <section className={styles.fieldGroup}>
+                <NameField fieldConfigs={fieldConfigs[field]} />
+              </section>
+            );
+          case 'gender':
+            return (
+              <section className={styles.fieldGroup}>
+                <GenderField />
+              </section>
+            );
+          case 'id':
+            return (
+              <section className={styles.fieldGroup}>
+                <IdField />
+              </section>
+            );
+        }
+      })}
     </section>
   );
 };
