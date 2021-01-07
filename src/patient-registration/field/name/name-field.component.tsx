@@ -1,17 +1,21 @@
 import React from 'react';
-import { Input } from '../../input/basic-input/input/input.component';
-import styles from './name.scss';
-
+import { TextInput } from 'carbon-components-react';
+import fieldStyles from '../field.scss';
 export const NameField = ({ fieldConfigs }) => {
   return (
     <div>
-      <span className={styles.FullName}>Full Name</span>
-      <label htmlFor="firstName">First Name</label>
-      <Input type="text" name="firstName" />
-      <label htmlFor="middleName">Middle Name</label>
-      <Input type="text" name="middleName" />
-      <label htmlFor="additionalFamilyName">Last Name</label>
-      <Input type="text" name="additionalFamilyName" />
+      <p className={fieldStyles.fieldHeader}>Full Name</p>
+      <div style={{ marginBottom: '1rem' }}>
+        <TextInput id="firstName" name="firstName" labelText="First Name" />
+      </div>
+      {fieldConfigs.displayMiddleName && (
+        <div style={{ marginBottom: '1rem' }}>
+          <TextInput id="middleName" name="middleName" labelText="Middle Name" />
+        </div>
+      )}
+      <div style={{ marginBottom: '1rem' }}>
+        <TextInput id="additionalFamilyName" name="middleName" labelText="Last Name" />
+      </div>
     </div>
   );
 };

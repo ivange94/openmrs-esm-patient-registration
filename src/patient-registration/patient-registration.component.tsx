@@ -21,7 +21,6 @@ import { DemographicsSection } from './section/demographics/demographics-section
 import { ContactInfoSection } from './section/contact-info/contact-info-section.component';
 import { DeathInfoSection } from './section/death-info/death-info-section.component';
 import { DummyDataInput } from './input/dummy-data/dummy-data-input.component';
-import { PersonAttributesSection } from './section/person-attributes/person-attributes-section.component';
 import { RelationshipsSection } from './section/patient-relationships/relationships-section.component';
 
 import styles from './patient-registration.scss';
@@ -507,6 +506,7 @@ export const PatientRegistration: React.FC = () => {
                         </Link>
                       </div>
                     ))}
+                    <Button type="submit">{existingPatient ? 'Save Patient' : 'Register Patient'}</Button>
                   </div>
                 </div>
                 <div className="bx--col-lg-10 bx--col-md-6">
@@ -557,7 +557,6 @@ export const PatientRegistration: React.FC = () => {
                         );
                     }
                   })}
-                  <Button type="submit">{existingPatient ? 'Save Patient' : 'Register Patient'}</Button>
                 </div>
               </div>
             </div>

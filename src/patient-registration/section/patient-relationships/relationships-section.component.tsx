@@ -81,7 +81,7 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({ setF
                   <br />
                   {relationships.map((relationship, index) => (
                     <div key={index} className={styles.relationship}>
-                      <div className={styles.searchBox}>
+                      <div className={styles.searchBox} style={{ marginBottom: '1rem' }}>
                         <Autosuggest
                           name={`relationships[${index}].relatedPerson`}
                           placeholder="Find person"
@@ -91,36 +91,21 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({ setF
                           getFieldValue={item => item.uuid}
                         />
                       </div>
-                      <span className={styles.label}>Is a</span>
-                      <div className={styles.selectRelationshipType}>
+                      <div className={`${styles.selectRelationshipType}`} style={{ marginBottom: '1rem' }}>
                         <Select
                           id="select"
                           defaultValue="placeholder-item"
-                          noLabel={true}
+                          labelText="Relationship"
                           onChange={handleRelationshipTypeChange}
                           name={`relationships[${index}].relationship`}>
-                          <SelectItem disabled hidden value="placeholder-item" text="Select Relationship Type" />
+                          <SelectItem disabled hidden value="placeholder-item" text="Relationship to patient" />
                           {relationshipTypes.map(type => (
                             <SelectItem text={type.display} value={`${type.uuid}/${type.direction}`} />
                           ))}
                         </Select>
                       </div>
                       <div className={styles.actions}>
-                        <Button
-                          renderIcon={TrashCan16}
-                          iconDescription="Remove relationship"
-                          hasIconOnly
-                          onClick={() => remove(index)}
-                          kind="danger"
-                        />
-                      </div>
-                      <div className={styles.actions}>
-                        <Button
-                          renderIcon={Add16}
-                          iconDescription="Add relationship"
-                          hasIconOnly
-                          onClick={() => push({})}
-                        />
+                        <Button kind="gost">Add Relationship</Button>
                       </div>
                     </div>
                   ))}

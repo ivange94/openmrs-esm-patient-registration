@@ -1,25 +1,22 @@
 import React from 'react';
+import { RadioButton, RadioButtonGroup, DatePicker, DatePickerInput } from 'carbon-components-react';
 
 export const GenderField = () => (
   <div>
     <h4>Sex &amp; Birth</h4>
-    <div>
-      <p>Sex</p>
-      <input type="radio" id="male" name="gender" value="Male" />
-      <label htmlFor="male">Male</label>
-      <br />
-      <input type="radio" id="female" name="gender" value="Female" />
-      <label htmlFor="female">Female</label>
-      <br />
-      <input type="radio" id="other" name="gender" value="Other" />
-      <label htmlFor="other">Other</label>
+    <div style={{ marginBottom: '1rem' }}>
+      <p className="bx--label">Sex</p>
+      <RadioButtonGroup name="gender" orientation="vertical">
+        <RadioButton id="male" labelText="Male" value="male" />
+        <RadioButton id="female" labelText="Female" value="female" />
+        <RadioButton id="other" labelText="Other" value="other" />
+      </RadioButtonGroup>
     </div>
     <br />
-    <div>
-      <p>Birth</p>
-      <label htmlFor="dob">Date of Birth</label>
-      <br />
-      <input type="date" name="dob" id="dob" />
+    <div style={{ marginBottom: '1rem' }}>
+      <DatePicker dateFormat="m/d/Y" datePickerType="simple">
+        <DatePickerInput id="dob" placeholder="mm/dd/yyyy" labelText="Date of Birth" />
+      </DatePicker>
     </div>
   </div>
 );

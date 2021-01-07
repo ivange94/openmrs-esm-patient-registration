@@ -69,7 +69,7 @@ export const esmPatientRegistrationSchema = {
     _type: Type.Object,
     _default: {
       name: {
-        displayMiddleName: false,
+        displayMiddleName: true,
         unidentifiedPatient: true,
       },
     },
