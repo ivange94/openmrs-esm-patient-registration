@@ -1,20 +1,4 @@
 @import "../root.scss";
-.form {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    background-color: var(--omrs-color-bg-high-contrast);
-    padding: 10px;
-}
-
-.formTitle {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
 .title {
     color: var(--omrs-color-brand-teal);
 }
@@ -40,15 +24,17 @@
     cursor: pointer;
 }
 
-.productiveHeading02:hover {
-    text-decoration: none;
-    color: $ui-04;
-}
-
 .space05 {
     margin: $spacing-05 0 $spacing-05 0;
 }
 
 .fixedPosition {
     position: fixed;
+}
+
+$color-gray-70: #525252;
+$color-gray-100: #161616;
+$grey-2: #e0e0e0;
+.TouchTarget a:active {
+    color: $color-gray-100;
 }

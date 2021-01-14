@@ -1,22 +1,22 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormValues } from '../../patient-registration.component';
-import { NameInput } from '../../input/custom-input/name/name-input.component';
-import { UnidentifiedPatientInput } from '../../input/custom-input/unidentified-patient/unidentified-patient-input.component';
-import { SelectInput } from '../../input/basic-input/select/select-input.component';
-import { EstimatedAgeInput } from '../../input/custom-input/estimated-age/estimated-age-input.component';
-import { Input } from '../../input/basic-input/input/input.component';
 import styles from './../section.scss';
 import { useField } from 'formik';
 import { NameField } from '../../field/name/name-field.component';
 import { GenderField } from '../../field/gender/gender-field.component';
 import { IdField } from '../../field/id/id-field.component';
+import { PatientIdentifierType } from '../../patient-registration-helper';
 
 interface DemographicsSectionProps {
   setFieldValue(field: string, value: any, shouldValidate?: boolean): void;
   values: FormValues;
   fields: Array<string>;
   fieldConfigs: any;
+  identifierTypes: PatientIdentifierType[];
+  validationSchema: any;
+  inEditMode: boolean;
+  setValidationSchema(value: any): void;
 }
 
 export const DemographicsSection: React.FC<DemographicsSectionProps> = ({
@@ -24,6 +24,10 @@ export const DemographicsSection: React.FC<DemographicsSectionProps> = ({
   values,
   fields,
   fieldConfigs,
+  identifierTypes,
+  validationSchema,
+  inEditMode,
+  setValidationSchema,
 }) => {
   const { t } = useTranslation();
   const [field, meta] = useField('addNameInLocalLanguage');
@@ -37,7 +41,6 @@ export const DemographicsSection: React.FC<DemographicsSectionProps> = ({
   }, [field.value, meta.touched]);
   return (
     <section className={styles.formSection} aria-label="Demographics Section">
-      <h5 className={`omrs-type-title-5 ${styles.formSectionTitle}`}>{t('demographics', 'Demographics')}</h5>
       {fields.map(field => {
         switch (field) {
           case 'name':
@@ -55,7 +58,13 @@ export const DemographicsSection: React.FC<DemographicsSectionProps> = ({
           case 'id':
             return (
               <section className={styles.fieldGroup}>
-                <IdField />
+                <IdField
+                  identifierTypes={identifierTypes}
+                  validationSchema={validationSchema}
+                  setValidationSchema={setValidationSchema}
+                  inEditMode
+                  values={values}
+                />
               </section>
             );
         }

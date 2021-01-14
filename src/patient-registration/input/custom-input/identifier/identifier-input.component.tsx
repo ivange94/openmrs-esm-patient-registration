@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import styles from './../../input.scss';
 import { useField } from 'formik';
 import { find } from 'lodash';
 import { PatientIdentifierType } from '../../../patient-registration-helper';
 import * as Yup from 'yup';
 import { SelectInput } from '../../basic-input/select/select-input.component';
 import { Input } from '../../basic-input/input/input.component';
+import { Grid, Row, Column } from 'carbon-components-react';
 
 interface IdentifierInputProps {
   identifierType: PatientIdentifierType;
@@ -74,36 +74,34 @@ export const IdentifierInput: React.FC<IdentifierInputProps> = ({
   }, [selectSourceField.value]);
 
   return (
-    <div className={`${styles.fieldRow} ${styles.identifierInput}`}>
+    <>
       {sources.length > 1 && (
-        <div className={styles.subFieldRow}>
-          <SelectInput
-            name={'source-for-' + name}
-            options={sources.map(source => source.name)}
-            label={identifierType.name}
-            showRequiredAsterisk={sources.length > 0 && identifierType.required ? true : false}
-          />
-        </div>
+        <Row>
+          <Column lg={1}>
+            <SelectInput
+              name={'source-for-' + name}
+              options={sources.map(source => source.name)}
+              label={identifierType.name}
+            />
+          </Column>
+          <Column lg={{ span: 7, offset: 3 }}>
+            <Input
+              id={name}
+              light
+              placeholder={
+                !option.manualEntryEnabled
+                  ? 'Auto-generated'
+                  : option.manualEntryEnabled && option.automaticGenerationEnabled
+                  ? 'Auto-generated'
+                  : 'Enter identifier'
+              }
+              labelText={sources.length <= 1 ? identifierType.name : ''}
+              name={name}
+              disabled={!option.manualEntryEnabled}
+            />
+          </Column>
+        </Row>
       )}
-      <div className={styles.subFieldRow}>
-        <Input
-          type="text"
-          label={sources.length <= 1 ? identifierType.name : ''}
-          showRequiredAsterisk={sources.length == 0 && identifierType.required ? true : false}
-          placeholder={
-            !option.manualEntryEnabled
-              ? 'Auto-generated'
-              : option.manualEntryEnabled && option.automaticGenerationEnabled
-              ? 'Auto-generated'
-              : 'Enter identifier'
-          }
-          name={name}
-          disabled={!option.manualEntryEnabled}
-          helperText={
-            option.manualEntryEnabled && option.automaticGenerationEnabled ? 'Leave blank to auto-generate' : ''
-          }
-        />
-      </div>
-    </div>
+    </>
   );
 };

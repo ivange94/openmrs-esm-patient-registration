@@ -1,26 +1,11 @@
-$color-gray-70: #525252;
-.fieldHeader {
-    width: 4.75rem;
-    height: 1.375rem;
-    margin: 0 16.125rem 1rem 0;
-    font-size: 1rem;
-    font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.38;
-    letter-spacing: normal;
-    color: var(--color-gray-70);
+@import "../../root.scss";
+.productiveHeading02 {
+    @include carbon--type-style("productive-heading-02");
+    margin-bottom: 1rem;
 }
 
-.labelText {
-    width: 20.875rem;
-    height: 1rem;
-    margin: 0 0 0.5rem;
-    font-size: 0.75rem;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.33;
-    letter-spacing: 0.32px;
-    color: var(--color-gray-70);
+.productiveHeading02Light {
+    @include carbon--type-style("productive-heading-02");
+    margin-bottom: 1rem;
+    color: #525252;
 }

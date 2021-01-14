@@ -31,7 +31,7 @@ import { camelCase, capitalize, find } from 'lodash';
 import { interpolateString, navigate } from '@openmrs/esm-config';
 import { useTranslation } from 'react-i18next';
 import { XAxis16 } from '@carbon/icons-react';
-import { Button, Link } from 'carbon-components-react';
+import { Button, Link, Grid, Row, Column } from 'carbon-components-react';
 import { SectionWrapper } from './section/section-wrapper.component';
 
 export const initialAddressFieldValues = {};
@@ -329,29 +329,6 @@ export const PatientRegistration: React.FC = () => {
     }
   }, [addressTemplate]);
 
-  useEffect(() => {
-    if (config && config.personAttributeSections) {
-      let { personAttributeSections } = config;
-      let allPersonAttributes = [];
-      personAttributeSections.forEach(({ personAttributes }) => {
-        allPersonAttributes = allPersonAttributes.concat(personAttributes);
-      });
-      let personAttributesValidationSchema = Yup.object(
-        allPersonAttributes.reduce((final, current) => {
-          const { name, label, validation } = current;
-          const { required, matches } = validation;
-          let validationObj = Yup.string().matches(matches, `Invalid ${t(label)}`);
-          if (required) {
-            validationObj = validationObj.required(`${t(label)} is required`);
-          }
-          final[name] = validationObj;
-          return final;
-        }, {}),
-      );
-      setValidationSchema(oldSchema => oldSchema.concat(personAttributesValidationSchema));
-    }
-  }, [config]);
-
   const getValueIfItExists = (field: string, selector: string, doc: XMLDocument) => {
     let element = doc.querySelector(selector);
     if (element) {
@@ -480,7 +457,7 @@ export const PatientRegistration: React.FC = () => {
   };
 
   return (
-    <main className={`omrs-main-content ${styles.main}`}>
+    <main className={`omrs-main-content`}>
       <Formik
         initialValues={initialFormValues}
         validationSchema={validationSchema}
@@ -490,9 +467,9 @@ export const PatientRegistration: React.FC = () => {
         }}>
         {props => (
           <Form className={styles.form}>
-            <div className="bx--grid bx--grid--narrow">
-              <div className="bx--row">
-                <div className="bx--col-lg-2 bx--col-md-2">
+            <Grid>
+              <Row>
+                <Column lg={2} md={2} sm={1}>
                   <div className={styles.fixedPosition}>
                     <h4>{existingPatient ? 'Edit' : 'Create New'} Patient</h4>
                     {localStorage.getItem('openmrs:devtools') === 'true' && !existingPatient && (
@@ -500,66 +477,94 @@ export const PatientRegistration: React.FC = () => {
                     )}
                     <p className={styles.label01}>Jump to</p>
                     {sections.map(section => (
-                      <div className={styles.space05}>
-                        <Link className={styles.productiveHeading02} onClick={() => scrollIntoView(section.id)}>
+                      <div className={`${styles.space05} ${styles.TouchTarget}`}>
+                        <Link className={styles.LinkName} onClick={() => scrollIntoView(section.id)}>
                           <XAxis16 /> {section.name}
                         </Link>
                       </div>
                     ))}
-                    <Button type="submit">{existingPatient ? 'Save Patient' : 'Register Patient'}</Button>
+                    <Button style={{ marginBottom: '1rem', width: '11.688rem', display: 'block' }} type="submit">
+                      {existingPatient ? 'Save Patient' : 'Register Patient'}
+                    </Button>
+                    <Button style={{ width: '11.688rem' }} kind="tertiary">
+                      Cancel
+                    </Button>
                   </div>
-                </div>
-                <div className="bx--col-lg-10 bx--col-md-6">
-                  {sections.map(section => {
-                    switch (section.id) {
-                      case 'demographics':
-                        return (
-                          <SectionWrapper {...section}>
-                            <DemographicsSection
-                              setFieldValue={props.setFieldValue}
-                              values={props.values}
-                              identifierTypes={identifierTypes}
-                              validationSchema={validationSchema}
-                              setValidationSchema={setValidationSchema}
-                              {...section}
-                            />
-                          </SectionWrapper>
-                        );
-                      case 'contact':
-                        return (
-                          <SectionWrapper {...section}>
-                            <ContactInfoSection addressTemplate={addressTemplate} />
-                          </SectionWrapper>
-                        );
-                      case 'ids':
-                        return (
-                          <SectionWrapper {...section}>
-                            <IdentifierSection
-                              identifierTypes={identifierTypes}
-                              validationSchema={validationSchema}
-                              setValidationSchema={setValidationSchema}
-                              inEditMode={!!existingPatient}
-                              values={props.values}
-                            />
-                          </SectionWrapper>
-                        );
-                      case 'death':
-                        return (
-                          <SectionWrapper {...section}>
-                            <DeathInfoSection values={props.values} />
-                          </SectionWrapper>
-                        );
-                      case 'relationships':
-                        return (
-                          <SectionWrapper {...section}>
-                            <RelationshipsSection setFieldValue={props.setFieldValue} />
-                          </SectionWrapper>
-                        );
-                    }
-                  })}
-                </div>
-              </div>
-            </div>
+                </Column>
+                <Column lg={10} md={6}>
+                  <Grid>
+                    {sections.map((section, index) => {
+                      switch (section.id) {
+                        case 'demographics':
+                          return (
+                            <Row>
+                              <Column lg={8} md={8} sm={3}>
+                                <SectionWrapper {...section} index={index}>
+                                  <DemographicsSection
+                                    setFieldValue={props.setFieldValue}
+                                    values={props.values}
+                                    identifierTypes={identifierTypes}
+                                    validationSchema={validationSchema}
+                                    setValidationSchema={setValidationSchema}
+                                    inEditMode={!!existingPatient}
+                                    {...section}
+                                  />
+                                </SectionWrapper>
+                              </Column>
+                            </Row>
+                          );
+                        case 'contact':
+                          return (
+                            <Row>
+                              <Column lg={8} md={8} sm={3}>
+                                <SectionWrapper {...section} index={index}>
+                                  <ContactInfoSection addressTemplate={addressTemplate} />
+                                </SectionWrapper>
+                              </Column>
+                            </Row>
+                          );
+                        case 'ids':
+                          return (
+                            <Row>
+                              <Column lg={8} md={8} sm={3}>
+                                <SectionWrapper {...section} index={index}>
+                                  <IdentifierSection
+                                    identifierTypes={identifierTypes}
+                                    validationSchema={validationSchema}
+                                    setValidationSchema={setValidationSchema}
+                                    inEditMode={!!existingPatient}
+                                    values={props.values}
+                                  />
+                                </SectionWrapper>
+                              </Column>
+                            </Row>
+                          );
+                        case 'death':
+                          return (
+                            <Row>
+                              <Column lg={8} md={8} sm={3}>
+                                <SectionWrapper {...section} index={index}>
+                                  <DeathInfoSection values={props.values} />
+                                </SectionWrapper>
+                              </Column>
+                            </Row>
+                          );
+                        case 'relationships':
+                          return (
+                            <Row>
+                              <Column lg={8} md={8} sm={3}>
+                                <SectionWrapper {...section} index={index}>
+                                  <RelationshipsSection setFieldValue={props.setFieldValue} />
+                                </SectionWrapper>
+                              </Column>
+                            </Row>
+                          );
+                      }
+                    })}
+                  </Grid>
+                </Column>
+              </Row>
+            </Grid>
           </Form>
         )}
       </Formik>

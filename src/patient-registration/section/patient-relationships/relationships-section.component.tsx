@@ -65,7 +65,6 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({ setF
 
   return (
     <section className={sectionStyles.formSection} aria-label="Relationships Section">
-      <h5 className="omrs-type-title-5">{t('relationshipsSectionHeader')}</h5>
       <section className={sectionStyles.fieldGroup}>
         <FieldArray name="relationships">
           {({
@@ -79,7 +78,7 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({ setF
               {relationships && relationships.length > 0 ? (
                 <div>
                   <br />
-                  {relationships.map((relationship, index) => (
+                  {relationships.map((_relationship: any, index: React.Key) => (
                     <div key={index} className={styles.relationship}>
                       <div className={styles.searchBox} style={{ marginBottom: '1rem' }}>
                         <Autosuggest
@@ -93,6 +92,7 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({ setF
                       </div>
                       <div className={`${styles.selectRelationshipType}`} style={{ marginBottom: '1rem' }}>
                         <Select
+                          light={true}
                           id="select"
                           defaultValue="placeholder-item"
                           labelText="Relationship"
@@ -105,7 +105,11 @@ export const RelationshipsSection: React.FC<RelationshipsSectionProps> = ({ setF
                         </Select>
                       </div>
                       <div className={styles.actions}>
-                        <Button kind="gost">Add Relationship</Button>
+                        {relationships.length - 1 === index && (
+                          <Button kind="ghost" onClick={() => push({})}>
+                            Add Relationship
+                          </Button>
+                        )}
                       </div>
                     </div>
                   ))}

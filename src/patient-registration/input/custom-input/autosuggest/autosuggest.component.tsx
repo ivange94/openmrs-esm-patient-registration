@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, TextInput } from 'carbon-components-react';
+import { TextInput } from 'carbon-components-react';
 import styles from './autosuggest.scss';
 
 interface AutosuggestProps {
@@ -66,6 +66,7 @@ export const Autosuggest: React.FC<AutosuggestProps> = ({
         onChange={handleChange}
         ref={searchBox}
         className={styles.autocompleteSearch}
+        light
       />
       {suggestions.length > 0 && (
         <ul className={styles.suggestions}>
